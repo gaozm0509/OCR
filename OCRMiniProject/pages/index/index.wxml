@@ -1,5 +1,8 @@
-<button bindtap="selectImage">选择图片</button>
-<button bindtap="uploadImage">上传</button>
+<view class="index_container">
+    <button bindtap="selectImage" class="index_button select_image_button" hover-class="button-hover">从相册中选取</button>
+    <button bindtap='takePhoto' class="index_button takePhoto_button" hover-class="button-hover">拍照</button>
+</view>
+<!-- <button bindtap="uploadImage">上传</button>
 <image style="width: 200px; height: 200px; background-color: #eeeeee;" src="{{image}}" mode="aspectFit"></image>
 
-<view>{{ resultData} }</view>
+<view>{{ resultData} }</view> -->

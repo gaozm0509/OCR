@@ -11,8 +11,7 @@ Page({
         sign: null,
         bucket: "gzmBucket",
         imageName: "gzmImageName",
-
-        resultData: "",
+        resultData: null
     },
     //事件处理函数
     bindViewTap: function() {
@@ -27,23 +26,54 @@ Page({
         wx.chooseImage({
             count: 1, // 默认9
             sizeType: ["original", "compressed"],
-            sourceType: ["album", "camera"],
+            sourceType: ["album"],
             success: function(res) {
                 // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
                 var tempFilePaths = res.tempFilePaths[0];
                 self.setData({ image: tempFilePaths });
-                console.log("res = " + res);
-                console.log("image src = " + self.data.image);
+                self.uploadImage();
+                // console.log("res = " + res);
+                // console.log("image src = " + self.data.image);
+                // self.push();
+            }
+        });
+    },
+    takePhoto: function() {
+        var self = this;
+
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ["original", "compressed"],
+            sourceType: ["camera"],
+            success: function(res) {
+                // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+                var tempFilePaths = res.tempFilePaths[0];
+                self.setData({ image: tempFilePaths });
+                self.uploadImage();
+                // self.push();
+                // console.log("res = " + res);
+                // console.log("image src = " + self.data.image);
             }
         });
     },
 
+    push: function() {
+        var url = '../showResultContent/showResultContent?src=' + this.data.image + '&resutString=' + this.data.resultData;
+        wx.navigateTo({
+            url: url,
+        })
+    },
+
 
     uploadImage: function() {
+        wx.showLoading({
+            title: '图片处理中...',
+        });
         var self = this;
         wx.uploadFile({
             url: app.globalData.host,
             filePath: self.data.image,
+            name: self.data.imageName,
             header: {
                 "Content-Type": "multipart/form-data",
             },
@@ -52,16 +82,21 @@ Page({
                 var jsonData = res.data;
                 var obj = JSON.parse(jsonData);
                 var resultArray = obj.data.items;
-                var resutString;
+                var resutString = '';
                 for (var i = 0; i < resultArray.length; i++) {
-                    var itmeString = resultArray[i].itemstring;
+                    var itmeString = resultArray[i].itemstring + '\n';
                     resutString = resutString + itmeString;
                 }
                 self.setData({
                     resultData: resutString,
-                })
+                });
+                // 返回数据隐藏loading
+                wx.hideLoading();
+                self.push();
             },
             fail: function(res) {
+                // 返回数据隐藏loading
+                wx.hideLoading();
                 console.log(res);
             },
             complete: function(res) {}

@@ -40,7 +40,8 @@ App({
         userInfo: null,
         appId: "1256481996",
         // host: "https://recognition.image.myqcloud.com/ocr/general",
-        host:"http://localhost:3000/upload.js",
+        // host:"http://localhost:3000/upload.js",
+        host: "http://172.16.60.128:3000/upload.js",
         SecretKey: "HNI2axCHRbdT7Y5XotnUmw1ylRCmA2jl",
         SecretId: "AKIDnT5znT3PehYFj1u22xn04ziIhvxpeNrA",
     }

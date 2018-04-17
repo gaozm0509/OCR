@@ -10,7 +10,7 @@
 	"compileType": "miniprogram",
 	"libVersion": "1.9.94",
 	"appid": "wxed6fe423911ded6c",
-	"projectname": "OCRMiniProject",
+	"projectname": "miniORC",
 	"isGameTourist": false,
 	"condition": {
 		"search": {

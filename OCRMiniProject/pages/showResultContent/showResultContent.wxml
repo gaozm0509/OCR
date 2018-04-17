@@ -1,0 +1,5 @@
+<view class="index_container">
+    <image mode="{{imageModel}}" src="{{src}}" class="image"></image>
+    <textarea value="{{resutString}}" maxlength="-1" class="textarea"></textarea>
+    <button class="button" bindtap='copy' hover-class="button-hover">复制</button>
+</view>
