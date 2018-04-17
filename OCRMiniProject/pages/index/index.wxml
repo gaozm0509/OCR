@@ -2,4 +2,4 @@
 <button bindtap="uploadImage">上传</button>
 <image style="width: 200px; height: 200px; background-color: #eeeeee;" src="{{image}}" mode="aspectFit"></image>
 
-<view>{{resultData}}</view>
+<view>{{ resultData} }</view>
