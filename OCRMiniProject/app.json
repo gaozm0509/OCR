@@ -2,6 +2,7 @@
     "pages": [
         "pages/index/index",
         "pages/logs/logs",
+        "pages/photoClipping/photoClipping",
         "pages/showResultContent/showResultContent"
     ],
     "window": {

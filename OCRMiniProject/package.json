@@ -11,6 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "crypto-js": "^3.1.9-1",
-    "qcloudapi-sdk": "^0.1.6"
+    "qcloudapi-sdk": "^0.1.6",
+    "wel-cropper-component": "^1.0.2",
+    "wel-cropper-template": "^1.0.2"
   }
 }

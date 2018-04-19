@@ -36,4 +36,5 @@ page {
     border-radius: 4;
     color: white;
     margin-top: 20rpx;
+    font-size: 15px;
 }

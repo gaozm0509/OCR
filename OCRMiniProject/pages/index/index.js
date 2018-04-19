@@ -1,5 +1,9 @@
 //index.js
 const app = getApp();
+const W = app.globalData.SystemW
+const H = app.globalData.SystemH - (app.globalData.isIpx ? 84 : 50)
+
+let cropper = require('../../welCropper/welCropper');
 
 Page({
     data: {
@@ -13,12 +17,6 @@ Page({
         imageName: "gzmImageName",
         resultData: null
     },
-    //事件处理函数
-    bindViewTap: function() {
-        wx.navigateTo({
-            url: "../logs/logs"
-        });
-    },
 
     selectImage: function() {
         var self = this;
@@ -30,11 +28,8 @@ Page({
             success: function(res) {
                 // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
                 var tempFilePaths = res.tempFilePaths[0];
-                self.setData({ image: tempFilePaths });
-                self.uploadImage();
-                // console.log("res = " + res);
-                // console.log("image src = " + self.data.image);
-                // self.push();
+                // self.setData({ image: tempFilePaths });
+                self.welCropper(tempFilePaths);
             }
         });
     },
@@ -48,22 +43,49 @@ Page({
             success: function(res) {
                 // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
                 var tempFilePaths = res.tempFilePaths[0];
-                self.setData({ image: tempFilePaths });
-                self.uploadImage();
-                // self.push();
-                // console.log("res = " + res);
-                // console.log("image src = " + self.data.image);
+
+                self.welCropper(tempFilePaths);
             }
         });
     },
 
     push: function() {
         var url = '../showResultContent/showResultContent?src=' + this.data.image + '&resutString=' + this.data.resultData;
+        // var url = '../photoClipping/photoClipping?src=' + this.data.image + '&resutString=' + this.data.resultData;
         wx.navigateTo({
             url: url,
         })
     },
+    welCropper: function(imagePath) {
+        var self = this;
+        // 将选取图片传入cropper，并显示cropper
+        // mode=rectangle 返回图片path
+        // mode=quadrangle 返回4个点的坐标，并不返回图片。这个模式需要配合后台使用，用于perspective correction
+        var tempFilePath = imagePath;
+        let modes = ["rectangle"]
+        let mode = modes[0] //rectangle, quadrangle
+        self.showCropper({
+            src: tempFilePath,
+            mode: mode,
+            sizeType: ['original'], //'original'(default) | 'compressed'
+            callback: (res) => {
+                if (mode == 'rectangle') {
+                    console.log("crop callback:" + res)
+                    self.setData({ image: res });
+                    self.uploadImage();
+                } else {
+                    // wx.showModal({
+                    //     title: '',
+                    //     content: JSON.stringify(res),
+                    // })
 
+                    // console.log(res)
+                }
+
+                // that.hideCropper() //隐藏，我在项目里是点击完成就上传，所以如果回调是上传，那么隐藏掉就行了，不用previewImage
+            }
+        })
+    },
 
     uploadImage: function() {
         wx.showLoading({
@@ -92,6 +114,7 @@ Page({
                 });
                 // 返回数据隐藏loading
                 wx.hideLoading();
+                self.hideCropper()
                 self.push();
             },
             fail: function(res) {
@@ -99,7 +122,9 @@ Page({
                 wx.hideLoading();
                 console.log(res);
             },
-            complete: function(res) {}
+            complete: function(res) {
+                wx.hideLoading();
+            }
         });
     },
 
@@ -131,6 +156,9 @@ Page({
                 }
             });
         }
+        var self = this
+            // 初始化组件数据和绑定事件
+        cropper.init.apply(self, [W, H]);
     },
     getUserInfo: function(e) {
         console.log(e);
