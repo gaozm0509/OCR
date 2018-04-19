@@ -9,7 +9,7 @@
             "type": "node",
             "request": "launch",
             "name": "启动程序",
-            "program": "${workspaceFolder}/hello.js"
+            "program": "${workspaceFolder}/api.js"
         }
     ]
 }

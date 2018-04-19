@@ -35,7 +35,8 @@ Page({
     },
     takePhoto: function() {
         var self = this;
-
+        // console.log('userInfo' + app.globalData.userInfo);
+        // return;
         wx.chooseImage({
             count: 1, // 默认9
             sizeType: ["original", "compressed"],
@@ -93,7 +94,7 @@ Page({
         });
         var self = this;
         wx.uploadFile({
-            url: app.globalData.host,
+            url: app.globalData.host + 'upload',
             filePath: self.data.image,
             name: self.data.imageName,
             header: {
