@@ -5,59 +5,13 @@ const { uploadFile } = require('./upload');
 const querystring = require('querystring');
 const request = require('request');
 const fs = require('fs');
+const config = require('./config');
 
-
-var appid = "1256481996";
-var secretid = "AKIDnT5znT3PehYFj1u22xn04ziIhvxpeNrA";
-var secretkey = "HNI2axCHRbdT7Y5XotnUmw1ylRCmA2jl";
+var appid = config.txyAppid;
+var secretid = config.txySecretId;
+var secretkey = config.txySecretKey;
 
 const app = new Koa();
-
-// app.use(async ctx => {
-//     // console.log("ctx.url:" + ctx.url);
-//     // console.log("ctx.url:" + ctx.method);
-//     if (ctx.url === '/' && ctx.method === 'GET') {
-//         // 当GET请求时候返回表单页面
-//         let html = `
-//           <h1>koa2 upload demo</h1>
-//           <form method="POST" action="/upload.json" enctype="multipart/form-data">
-//             <p>file upload</p>
-//             <span>picName:</span><input name="picName" type="text" /><br/>
-//             <input name="file" type="file" /><br/><br/>
-//             <button type="submit">submit</button>
-//           </form>
-//         `
-//         ctx.body = html
-
-//     } else if (ctx.url === '/upload.js' && ctx.method === 'POST') {
-//         // 上传文件请求处理
-//         let result = { success: false }
-//         let serverFilePath = path.join(__dirname, 'upload-files')
-
-//         // 上传文件事件
-//         result = await uploadFile(ctx, {
-//                 fileType: 'album',
-//                 path: serverFilePath
-//             })
-//             // console.log("path:" + result.imagePath);
-//             // ctx.body = result
-
-//         // 异步
-//         await new Promise((resolve) => {
-//             requestTXService(result.imagePath, function(analysisResult) {
-//                 // 返回analysisResult
-//                 // 获取成功后删除图片
-//                 fs.unlinkSync(result.imagePath)
-//                     // console.log("analysisResult:" + analysisResult)
-//                 ctx.body = analysisResult;
-//                 resolve();
-//             });
-//         });
-//     } else {
-//         // 其他请求显示404
-//         ctx.body = '<h1>404！！！ o(╯□╰)o</h1>'
-//     }
-// });
 
 
 function requestTXService(imagePath) {
@@ -110,10 +64,6 @@ function getSign(imagePath) {
     return sign;
 }
 
-// export {
-//     requestTXService,
-// };
-// app.listen(3000)
 module.exports = {
     requestTXService,
 }

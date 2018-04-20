@@ -68,7 +68,7 @@ Page({
         self.showCropper({
             src: tempFilePath,
             mode: mode,
-            sizeType: ['original'], //'original'(default) | 'compressed'
+            sizeType: ['original', 'compressed'], //'original'(default) | 'compressed'
             callback: (res) => {
                 if (mode == 'rectangle') {
                     console.log("crop callback:" + res)
