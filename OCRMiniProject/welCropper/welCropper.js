@@ -14,6 +14,9 @@ var init = function(W, H) {
             height: H,
             W: W,
             H: H,
+            display: 'none',
+            rotateOpacity: app.globalData.rotateOpacity,
+            zIndex: 1,
             itemLength: 50,
             imageInfo: {
                 path: '',
@@ -27,6 +30,7 @@ var init = function(W, H) {
             cropCallback: null,
             sizeType: ['original', 'compressed'], //'original'(default) | 'compressed'
             original: false, // 默认压缩，压缩比例为截图的0.4
+            compression: 0.8,
             mode: 'rectangle', //默认矩形
         },
         cropperMovableItems: {
@@ -172,14 +176,22 @@ var init = function(W, H) {
 
     // 原图按钮被点击
     that.originalChange = () => {
-        let that = this
+        console.log('originalChange=====');
+        let self = this
+        var cropperData = self.data.cropperData;
+        cropperData.display = 'none';
+        cropperData.drawSign = !cropperData.drawSign
+        self.setData({
+            cropperData,
+        });
+        return;
         let imageInfo = that.data.cropperData.imageInfo
         let originalSize = that.data.cropperChangableData.originalSize
         let width = originalSize.width
         let height = originalSize.height
         let original = !that.data.cropperData.original
 
-        let compressedScale = original ? 1.0 : 0.4
+        let compressedScale = original ? 1.0 : that.data.cropperData.compression
         let size = cropperUtil.getAdjustSize(W, H, width, height)
 
         console.log("change original=" + original)
@@ -227,7 +239,16 @@ var init = function(W, H) {
 
     // 截取选中图片，如果有回调，则调用
     that.cropImage = () => {
+
         let that = this
+        if (that.data.cropperData.display == 'none') {
+            console.log(that.data.cropperData.display.length + '=====')
+            if (that.data.cropperData.cropCallback) {
+                console.log('path====' + that.data.cropperData.imageInfo.path);
+                that.data.cropperData.cropCallback(that.data.cropperData.imageInfo.path)
+            }
+            return;
+        }
         let cropperData = that.data.cropperData
         let mode = cropperData.mode
         let scaleInfo = cropperData.scaleInfo
@@ -351,82 +372,92 @@ var init = function(W, H) {
         })
     }
 
-    // 旋转图片
+    // 旋转给为裁剪
     that.rotateImage = () => {
-        console.log("rotate image")
-        let that = this
-        let imageInfo = that.data.cropperData.imageInfo
-        let width = imageInfo.width
-        let height = imageInfo.height
-        let rotateDegree = that.data.cropperChangableData.rotateDegree
-
-        rotateDegree = rotateDegree == 360 ? 90 : rotateDegree + 90
-
-        // 判断是否为垂直方向
-        let isVertical = rotateDegree % 180 > 0
-        let rotateWidth = isVertical ? height : width
-        let rotateHeight = isVertical ? width : height
-
-        let size = cropperUtil.getAdjustSize(W, H, rotateWidth, rotateHeight)
-
-        // 适应屏幕的位置
-        let left = (W - size.width) / 2
-        let top = (H - size.height) / 2
-        let cropperData = that.data.cropperData
-
-        cropperData.left = left
-        cropperData.top = top
-
-        let cropperChangableData = that.data.cropperChangableData
-        cropperChangableData.originalSize = {
-            width: rotateWidth,
-            height: rotateHeight
+            let self = this
+            var cropperData = self.data.cropperData;
+            cropperData.display = 'block';
+            cropperData.drawSign = !cropperData.drawSign
+            self.setData({
+                cropperData
+            });
         }
-        cropperChangableData.scaleSize = {
-            width: size.width,
-            height: size.height
-        }
-        cropperChangableData.rotateDegree = rotateDegree
+        // 旋转图片
+        // that.rotateImage = () => {
+        //     console.log("rotate image")
+        //     let that = this
+        //     let imageInfo = that.data.cropperData.imageInfo
+        //     let width = imageInfo.width
+        //     let height = imageInfo.height
+        //     let rotateDegree = that.data.cropperChangableData.rotateDegree
 
-        that.setData({
-            cropperChangableData: cropperChangableData,
-            cropperData: cropperData
-        })
+    //     rotateDegree = rotateDegree == 360 ? 90 : rotateDegree + 90
 
-        console.log(cropperChangableData)
+    //     // 判断是否为垂直方向
+    //     let isVertical = rotateDegree % 180 > 0
+    //     let rotateWidth = isVertical ? height : width
+    //     let rotateHeight = isVertical ? width : height
 
-        let cropperMovableItemsCopy = that.data.cropperMovableItems
-        let cropperMovableItems = {
-            topleft: {
-                x: 0,
-                y: 0
-            },
-            topright: {
-                x: 0,
-                y: 0
-            },
-            bottomleft: {
-                x: 0,
-                y: 0
-            },
-            bottomright: {
-                x: 0,
-                y: 0
-            }
-        }
+    //     let size = cropperUtil.getAdjustSize(W, H, rotateWidth, rotateHeight)
 
-        that.setData({
-            cropperMovableItems: cropperMovableItems
-        })
+    //     // 适应屏幕的位置
+    //     let left = (W - size.width) / 2
+    //     let top = (H - size.height) / 2
+    //     let cropperData = that.data.cropperData
 
-        setTimeout(() => {
-            that.loadImage(imageInfo.path, rotateWidth, rotateHeight, true)
-                // that.setData({
-                //     cropperMovableItems: cropperMovableItemsCopy
-                // })
-        }, 100)
+    //     cropperData.left = left
+    //     cropperData.top = top
 
-    }
+    //     let cropperChangableData = that.data.cropperChangableData
+    //     cropperChangableData.originalSize = {
+    //         width: rotateWidth,
+    //         height: rotateHeight
+    //     }
+    //     cropperChangableData.scaleSize = {
+    //         width: size.width,
+    //         height: size.height
+    //     }
+    //     cropperChangableData.rotateDegree = rotateDegree
+
+    //     that.setData({
+    //         cropperChangableData: cropperChangableData,
+    //         cropperData: cropperData
+    //     })
+
+    //     console.log(cropperChangableData)
+
+    //     let cropperMovableItemsCopy = that.data.cropperMovableItems
+    //     let cropperMovableItems = {
+    //         topleft: {
+    //             x: 0,
+    //             y: 0
+    //         },
+    //         topright: {
+    //             x: 0,
+    //             y: 0
+    //         },
+    //         bottomleft: {
+    //             x: 0,
+    //             y: 0
+    //         },
+    //         bottomright: {
+    //             x: 0,
+    //             y: 0
+    //         }
+    //     }
+
+    //     that.setData({
+    //         cropperMovableItems: cropperMovableItems
+    //     })
+
+    //     setTimeout(() => {
+    //         that.loadImage(imageInfo.path, rotateWidth, rotateHeight, true)
+    //             // that.setData({
+    //             //     cropperMovableItems: cropperMovableItemsCopy
+    //             // })
+    //     }, 100)
+
+    // }
 
     // 根据图片大小设置canvas大小，并绘制图片
     that.loadImage = (src, width, height, isRotate) => {
@@ -454,7 +485,7 @@ var init = function(W, H) {
         cropperData.width = size.width
         cropperData.height = size.height
 
-        let compressedScale = z.data.cropperData.original ? 1.0 : 0.4
+        let compressedScale = z.data.cropperData.original ? 1.0 : z.data.cropperData.compression
             // let scaleSize = cropperUtil.getAdjustSize(W, H, width, height)
 
         cropperData.scaleInfo = {
@@ -528,7 +559,7 @@ var init = function(W, H) {
         let size = cropperUtil.getAdjustSize(W, H, imageInfo.width, imageInfo.height)
 
         if (imageInfo.path != '') {
-            let compressedScale = that.data.cropperData.original ? 1.0 : 0.4
+            let compressedScale = that.data.cropperData.original ? 1.0 : that.data.cropperData.compression
 
             //清空原图
             let ctx = wx.createCanvasContext("originalCanvas")
@@ -555,7 +586,7 @@ var init = function(W, H) {
 
         if (imageInfo.path != '') {
             let path = imageInfo.path
-            let compressedScale = z.data.cropperData.original ? 1.0 : 0.4
+            let compressedScale = z.data.cropperData.original ? 1.0 : z.data.cropperData.compression
             let rotateDegree = z.data.cropperChangableData.rotateDegree
 
             let canvasCtx = wx.createCanvasContext('canvas', z)
@@ -591,7 +622,7 @@ var init = function(W, H) {
 
         if (imageInfo.path != '') {
             let path = imageInfo.path
-            let compressedScale = z.data.cropperData.original ? 1.0 : 0.4
+            let compressedScale = z.data.cropperData.original ? 1.0 : z.data.cropperData.compression
             let rotateDegree = z.data.cropperChangableData.rotateDegree
 
             let originalCanvasCtx = wx.createCanvasContext('originalCanvas', z)

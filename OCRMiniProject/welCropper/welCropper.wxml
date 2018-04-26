@@ -4,8 +4,8 @@
             <canvas class="original_canvas" canvas-id="originalCanvas" style="width:{{cropperChangableData.originalSize.width}}px;height:{{cropperChangableData.originalSize.height}}px;"></canvas>
 
             <image src='{{cropperData.imageInfo.path}}' class='scale-image cropper_canvas_container_item' mode='aspectFill' style="left:{{cropperChangableData.previewImageInfo.x}}px; top:{{cropperChangableData.previewImageInfo.y}}px; width:{{cropperChangableData.previewImageInfo.w}}px; height:{{cropperChangableData.previewImageInfo.h}}px; transform:rotate({{cropperChangableData.rotateDegree}}deg);"></image>
-            <view class='cropper_canvas_container' style="width:{{cropperChangableData.scaleSize.width}}px;height:{{cropperChangableData.scaleSize.height}}px;">
-                <canvas class="move_canvas cropper_canvas_container_item" canvas-id="moveCanvas"></canvas>
+            <view class='cropper_canvas_container' style="display: {{cropperData.display}};width:{{cropperChangableData.scaleSize.width}}px;height:{{cropperChangableData.scaleSize.height}}px;">
+                <canvas class="move_canvas cropper_canvas_container_item"  style="opacity:{{cropperData.rotateOpacity}};" canvas-id="moveCanvas"></canvas>
 
                 <block wx:if="{{cropperData.drawSign==1}}">
                     <movable-area class="cropper_movable_area_container" style="width:{{cropperChangableData.scaleSize.width}}px;height:{{cropperChangableData.scaleSize.height}}px;">
@@ -20,7 +20,7 @@
                     <movable-area class="cropper_movable_area_container" style="width:{{cropperChangableData.scaleSize.width}}px;height:{{cropperChangableData.scaleSize.height}}px;">
                         <block wx:if="{{cropperMovableItems}}">
                             <block wx:for="{{cropperMovableItems}}" wx:key="moveItem">
-                                <movable-view class="move_item" style="width:{{cropperData.itemLength}}px; height:{{cropperData.itemLength}}px;" direction="all" x="{{item.x-cropperData.itemLength/2}}" y="{{item.y-cropperData.itemLength/2}}" bindtouchmove="moveEvent" bindtouchend="endEvent" data-key="{{index}}"></movable-view>
+                                <movable-view class="move_item" style=" width:{{cropperData.itemLength}}px; height:{{cropperData.itemLength}}px;" direction="all" x="{{item.x-cropperData.itemLength/2}}" y="{{item.y-cropperData.itemLength/2}}" bindtouchmove="moveEvent" bindtouchend="endEvent" data-key="{{index}}"></movable-view>
                             </block>
                         </block>
                     </movable-area>
@@ -36,7 +36,8 @@
                 形状
             </view> -->
             <view class="button_item rotate_button" bindtap="rotateImage">
-                旋转
+                <!-- 旋转,根据需求改为裁剪 -->
+                裁剪
             </view>
 
             <block wx:if="{{cropperData.sizeType.length==2}}">

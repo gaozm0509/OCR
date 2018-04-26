@@ -61,12 +61,13 @@ App({
             openid: null,
         },
         appId: "1256481996",
-        // host:"http://localhost:3000/upload.js",
-        host: "http://172.16.60.7:3000/",
-        SecretKey: "HNI2axCHRbdT7Y5XotnUmw1ylRCmA2jl",
-        SecretId: "AKIDnT5znT3PehYFj1u22xn04ziIhvxpeNrA",
+
+        // host: , //阿里云服务器
+        // SecretKey: "",
+        // SecretId: "",
         isIpx: false,
         SystemW: 0,
         SystemH: 0,
+        rotateOpacity: 1, //获取图片之后设置裁剪的透明度，默认可以裁剪
     }
 })

@@ -5,12 +5,6 @@
     <import src="../../welCropper/welCropper.wxml" />
 
     <!-- 调用组件 -->
-    <!-- <template is="welCropper" data="{{data:cropperData, cropperMovableItems:cropperMovableItems}}"></template> -->
     <template is="welCropper" data="{{cropperData:cropperData, cropperMovableItems:cropperMovableItems, cropperChangableData:cropperChangableData}}"></template>
 
 </view>
-
-<!-- <button bindtap="uploadImage">上传</button>
-<image style="width: 200px; height: 200px; background-color: #eeeeee;" src="{{image}}" mode="aspectFit"></image>
-
-<view>{{ resultData} }</view> -->
